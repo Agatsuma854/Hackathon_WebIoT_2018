@@ -6,7 +6,7 @@
 FaBoPWM faboPWM;
 
 const char ssid[] = "ESP32AP-AGATSUMA";
-const char pass[] = "21111111";
+const char pass[] = "11111111";
 const IPAddress ip(192,168,0,1);
 const IPAddress subnet(255,255,255,0);
 WebServer server(80);
@@ -20,11 +20,15 @@ const char page[] PROGMEM = R"=====(
 </head>
 <body>
 <center>
-<input type="button" value="↑" onClick="location.href='/forward'"><br>
+<input type="button" value="↖" onClick="location.href='/forwardLeft'"> 
+<input type="button" value="↑" onClick="location.href='/forward'">
+<input type="button" value="↗" onClick="location.href='/forwardRight'"><br>
 <input type="button" value="←" onClick="location.href='/right'">
 <input type="button" value="□" onClick="location.href='/stop'">
 <input type="button" value="→" onClick="location.href='/left'"><br>
-<input type="button" value="↓" onClick="location.href='/back'"><br>
+<input type="button" value="↙" onClick="location.href='/backLeft'"> 
+<input type="button" value="↓" onClick="location.href='/back'">
+<input type="button" value="↘" onClick="location.href='/backRight'"><br> 
 </center>
 </body>
 </html>
@@ -66,6 +70,31 @@ void handleRight(){
   server.send(200, "text/html", page);
 }
 
+// ここから斜め移動
+void handleForwardLeft(){
+  faboPWM.set_channel_value(0, BACK); 
+  faboPWM.set_channel_value(1, BACK);
+  server.send(200, "text/html", page);
+}
+
+void handleForwardRight(){
+  faboPWM.set_channel_value(0, BACK); 
+  faboPWM.set_channel_value(1, BACK);
+  server.send(200, "text/html", page);
+}
+
+void handleBackLeft(){
+  faboPWM.set_channel_value(0, BACK); 
+  faboPWM.set_channel_value(1, BACK);
+  server.send(200, "text/html", page);
+}
+
+void handleBackRight(){
+  faboPWM.set_channel_value(0, BACK); 
+  faboPWM.set_channel_value(1, BACK);
+  server.send(200, "text/html", page);
+}
+
 void setup()
 {
   Serial.begin(115200);
@@ -88,6 +117,13 @@ void setup()
   server.on("/back", handleBack);
   server.on("/left", handleLeft);
   server.on("/right", handleRight);
+
+  //以下斜め移動
+  server.on("/forwardLeft", handleForwardLeft);
+  server.on("/forwardRight", handleForwardRight);
+  server.on("/backLeft", handleBackLeft);
+  server.on("/backRight", handleBackRight);
+
   server.begin();
 
   pinMode(4, OUTPUT);
